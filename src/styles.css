@@ -1,0 +1,80 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: ui-rounded, 'Hiragino Maru Gothic ProN', Quicksand, Comfortaa, Manjari, 'Arial Rounded MT', 'Arial Rounded MT Bold', Calibri, source-sans-pro, sans-serif;
+}
+
+body {
+    background-color: #D9EAFD;
+}
+
+header {
+    background-color: #9AA6B2;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+.main {
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#page-title {
+    font-size: 30px;
+}
+
+#sub-title {
+    font-size: 22px;
+}
+
+.content-container {
+    display: flex;
+}
+
+.project {
+    background-color: white;
+    height: 180px;
+    width: 300px;
+    padding: 15px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-radius: 10px;
+}
+
+.project-text {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.project-title {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.project-description {
+    color: #747475;
+    font-size: 14px;
+}
+
+.project-button {
+    background-color: #9AA6B2;
+    border: none;
+    border-radius: 6px;
+    width: 180px;
+    height: 35px;
+    color: white;
+    font-weight: 500;
+    box-shadow: 0px 5px 10px #cacbcb;
+    align-self: center;
+}
+
+button:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}
