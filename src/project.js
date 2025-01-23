@@ -1,13 +1,17 @@
 import addImage from "./images/add.svg";
 
 class project {
+    static projID = 0;
     title;
     description;
+    id;
     tasks = [];
 
     constructor(title, description) {
         this.title = title;
         this.description = description;
+        this.id = project.projID;
+        project.projID++;
     }
 
     addTask(task) {
@@ -15,9 +19,10 @@ class project {
     }
 
     displayProject() {
-        
+        console.log(this.title);
     }
 
+    
     static displayAllProjects(projectsArray) {
         let subTitle = document.querySelector("#sub-title");
         subTitle.textContent = "All Projects";
@@ -41,6 +46,7 @@ class project {
 
             let projectButton = document.createElement("button");
             projectButton.setAttribute("class", "project-button");
+            projectButton.setAttribute("projID", project.id);
             projectButton.textContent = "Open";
 
             textDiv.appendChild(projectTitle);

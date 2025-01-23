@@ -15,3 +15,13 @@ allProjects.push(project1);
 console.log(project1);
 
 project.displayAllProjects(allProjects);
+
+
+let displayController = (function () {
+    let projButtons = document.querySelectorAll(".project-button");
+
+    projButtons.forEach(button => button.addEventListener("click", () => {
+        allProjects[parseInt(button.getAttribute("projid"))].displayProject();
+    }));
+    
+})();
