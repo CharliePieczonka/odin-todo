@@ -6,8 +6,8 @@ import addImage from "./images/add.svg";
 let allProjects = [];
 
 let project1 = new project("Default Project", "This is the default project present when the user first runs the app.");
-let task1 = new task("Initial Setup", "Initialize Webpack and create the required starting files", "01-17-2025", 1);
-let task2 = new task("Create Project Class", "Create project.js and a project class", "01-17-2025", 1);
+let task1 = new task("Initial Setup", "Initialize Webpack and create the required starting files", "1/17/2025", 1);
+let task2 = new task("Create Project Class", "Create project.js and a project class", "1/17/2025", 1);
 
 project1.addTask(task1);
 project1.addTask(task2);
@@ -16,7 +16,9 @@ allProjects.push(project1);
 console.log(project1);
 
 let displayController = (function () {
+    let currentProjIndex = -1;
     let projectDialog = document.querySelector("#project-dialog");
+    let taskDialog =  document.querySelector("#task-dialog");
 
     // create the project overview elements and add them to the DOM
     let displayAllProjects = () => {
@@ -85,6 +87,8 @@ let displayController = (function () {
 
     // create the task elements and add them to the DOM for a single project when the open button is selected
     let displayProject = (proj) => {
+        currentProjIndex = proj.id;
+
         let content = document.querySelector(".content-container");
         content.innerHTML = "";
         content.style.flexDirection = "column";
@@ -92,17 +96,21 @@ let displayController = (function () {
         let subTitle = document.querySelector("#sub-title");
         subTitle.textContent = proj.title + " Tasks";
 
-        let backButton = document.createElement("p");
-        backButton.setAttribute("class", "back-button");
-        backButton.textContent = "< back";
-
-        backButton.addEventListener("click", () => {
-            displayAllProjects();
-        });
-
         let mainHeader = document.querySelector(".main-header");
-        mainHeader.insertBefore(backButton, subTitle);
-        
+
+        // if a new task is added don't add a new back button. only add if switching from all projects to a project page
+        let backButton = document.querySelector(".back-button");
+        if(backButton === null) {
+            backButton = document.createElement("p");
+            backButton.setAttribute("class", "back-button");
+            backButton.textContent = "< back";
+
+            backButton.addEventListener("click", () => {
+                displayAllProjects();
+            });
+
+            mainHeader.insertBefore(backButton, subTitle);
+        }
 
         proj.tasks.forEach(task => {
             let taskDiv = document.createElement("div");
@@ -120,7 +128,7 @@ let displayController = (function () {
 
             let taskDue = document.createElement("p");
             taskDue.setAttribute("class", "task-duedate");
-            taskDue.textContent = task.dueDate;
+            taskDue.textContent = "Due: " + task.dueDate;
 
             let taskPriority = document.createElement("p");
             taskPriority.setAttribute("class", "task-priority");
@@ -160,38 +168,65 @@ let displayController = (function () {
             content.appendChild(taskDiv);
         });
 
-        let newTask = document.createElement("div");
-        newTask.setAttribute("class", "task new-task");
+        let newTaskDiv = document.createElement("div");
+        newTaskDiv.setAttribute("class", "task new-task");
         let newImg = document.createElement("img");
         newImg.setAttribute("class", "task-add");
         newImg.src = addImage;
         newImg.alt = "New Project";
 
-        newTask.appendChild(newImg);
-        content.appendChild(newTask);
+        // when new task is clicked, open the new task dialog
+        newTaskDiv.addEventListener("click", () => {
+            taskDialog.showModal();
+        });
+
+        newTaskDiv.appendChild(newImg);
+        content.appendChild(newTaskDiv);
     }
 
     // setup new project dialog functionality
-    let closeButton = document.querySelector("#project-cancel");
-    let confirmBtn = document.querySelector("#project-submit");
+    let confirmProject = document.querySelector("#project-submit");
 
-    confirmBtn.addEventListener("click", (event) => {
+    confirmProject.addEventListener("click", (event) => {
         event.preventDefault(); // We don't want to submit this fake form
 
-        let newTitle = document.querySelector("#title");
-        let newAuthor = document.querySelector("#desc-input");
+        let newTitle = document.querySelector("#project-title");
+        let newDesc = document.querySelector("#project-desc");
 
-        let newProj = new project(newTitle.value, newAuthor.value);
+        let newProj = new project(newTitle.value, newDesc.value);
         allProjects.push(newProj);
 
         newTitle.value = "";
-        newAuthor.value = "";
+        newDesc.value = "";
         
         projectDialog.close();
         displayAllProjects();
     });
 
     // setup new task dialog functionality
+    let confirmTask = document.querySelector("#task-submit");
+
+    confirmTask.addEventListener("click", (event) => {
+        event.preventDefault(); // We don't want to submit this fake form
+
+        let newTitle = document.querySelector("#task-title");
+        let newDesc = document.querySelector("#task-desc");
+        let newDueDate = document.querySelector("#dueDate");
+        let newPriority = document.querySelector("#priority");
+
+        let newTask = new task(newTitle.value, newDesc.value, newDueDate.valueAsDate.toLocaleDateString("en-US"), newPriority.value);
+        allProjects[currentProjIndex].tasks.push(newTask);
+
+        newTitle.value = "";
+        newDesc.value = "";
+        newPriority.value = "1";
+        newDueDate.value = "";
+
+        
+        taskDialog.close();
+        displayProject(allProjects[currentProjIndex]);
+    });
+
 
     return { displayAllProjects, displayProject }
 })();

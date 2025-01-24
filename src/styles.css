@@ -1,3 +1,4 @@
+/* shared */
 *:not(dialog) {
     margin: 0;
     padding: 0;
@@ -36,16 +37,6 @@ header {
     gap: 15px;
 }
 
-.back-button {
-    text-decoration: underline;
-    align-self: center;
-}
-
-.back-button:hover {
-    cursor: pointer;
-    color: #9AA6B2;
-}
-
 #sub-title {
     font-size: 22px;
 }
@@ -55,6 +46,7 @@ header {
     gap: 15px;
 }
 
+/* All projects page */
 .project {
     background-color: white;
     height: 180px;
@@ -117,43 +109,16 @@ button:active {
     height: 70px;
 }
 
-.dialogButton {
-    height: 25px;
-    width: 70px;
+/* Single project page */
+.back-button {
+    text-decoration: underline;
+    align-self: center;
 }
 
-.dialogFlexContainer {
-    padding: 10px 80px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+.back-button:hover {
+    cursor: pointer;
+    color: #9AA6B2;
 }
-
-.dialogTitle {
-    font-size: 20px;
-    font-weight: bold;
-}
-
-#title { 
-    width: 100%;
-    height: 25px;
-    padding-left: 5px;
-}
-
-#desc-input {
-    width: 100%;
-    padding-left: 5px;
-    resize: none;
-}
-
-.dialogFooter {
-    display: flex;
-    justify-content: space-evenly;
-}
-
-
-
-
 
 .task {
     background-color: white;
@@ -195,6 +160,8 @@ button:active {
 
 .task-buttons {
     align-self: end;
+    display: flex;
+    gap: 10px;
 }
 
 .task-button {
@@ -224,4 +191,45 @@ button:active {
 
 .task-add {
     height: 60px;
+}
+
+/* dialog */
+.dialogButton {
+    height: 25px;
+    width: 70px;
+}
+
+.dialogFlexContainer {
+    padding: 10px 80px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.dialogTitle {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.title { 
+    width: 100%;
+    height: 25px;
+    padding-left: 5px;
+}
+
+.desc-input {
+    width: 100%;
+    padding-left: 5px;
+    resize: none;
+}
+
+.dialogFooter {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#priority {
+    width: 50px;
+    padding-left: 10px;
+    height: 20px;
 }

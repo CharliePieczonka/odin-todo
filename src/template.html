@@ -11,12 +11,12 @@
             <div class="dialogFlexContainer">
                 <p class="dialogTitle">New Project</p>
                 <div class="dialogDiv titleDiv">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title">
+                    <label for="project-title">Title</label>
+                    <input type="text" name="project-title" id="project-title" class="title">
                 </div>
                 <div class="dialogDiv descDiv">
                     <label for="desc-input">Description</label>
-                    <textarea name="desc-input" id="desc-input" rows="4"></textarea>
+                    <textarea name="project-desc" id="project-desc" class="desc-input" rows="4"></textarea>
                 </div>
                 <div class="dialogFooter">
                     <button formmethod="dialog" class="dialogButton" id="project-cancel">Cancel</button>
@@ -30,26 +30,28 @@
             <div class="dialogFlexContainer">
                 <p class="dialogTitle">New Task</p>
                 <div class="dialogDiv titleDiv">
-                    <label for="title">Title</label>
-                    <input type="text" name="title" id="title">
+                    <label for="task-title">Title</label>
+                    <input type="text" name="task-title" id="task-title" class="title">
                 </div>
-                <div class="dialogDiv authorDiv">
-                    <label for="author">Author</label>
-                    <input type="text" name="author" id="author">
+                <div class="dialogDiv dateDiv">
+                    <label for="dueDate">Due Date:</label>
+                    <input type="date" name="dueDate" id="dueDate">
                 </div>
-                <div class="dialogBundle">
-                    <div class="dialogDiv pagesDiv">
-                        <label for="pages">Pages:</label>
-                        <input type="number" name="pages" id="pages">
-                    </div>
-                    <div class="dialogDiv readDiv">
-                        <input type="checkbox" name="read" id="read">
-                        <label for="read">Read Before?</label>
-                    </div>
+                <div class="dialogDiv priorityDiv">
+                    <label for="priority">Priority:</label>
+                    <select name="priority" id="priority">
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>
+                <div class="dialogDiv descDiv">
+                    <label for="desc-input">Description</label>
+                    <textarea name="task-desc" id="task-desc" class="desc-input" rows="4"></textarea>
                 </div>
                 <div class="dialogFooter">
-                    <button formmethod="dialog" class="dialogButton" id="cancelBook">Cancel</button>
-                    <button class="dialogButton" id="submitBook">Enter</button>
+                    <button formmethod="dialog" class="dialogButton" id="task-cancel">Cancel</button>
+                    <button class="dialogButton" id="task-submit">Enter</button>
                 </div>
             </div>
         </form>
