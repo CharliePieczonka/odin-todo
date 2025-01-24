@@ -16,6 +16,9 @@ allProjects.push(project1);
 console.log(project1);
 
 let displayController = (function () {
+    let projectDialog = document.querySelector("#project-dialog");
+
+    // create the project overview elements and add them to the DOM
     let displayAllProjects = () => {
         let content = document.querySelector(".content-container");
         content.innerHTML = "";
@@ -58,22 +61,29 @@ let displayController = (function () {
             projectDiv.appendChild(projectButton);
             content.appendChild(projectDiv);
 
+            // event listener for the open button on each project card
             projectButton.addEventListener("click", () => {
                 displayProject(proj);
             });
         });
 
-        let newProject = document.createElement("div");
-        newProject.setAttribute("class", "project new-project");
+        let newProjectDiv = document.createElement("div");
+        newProjectDiv.setAttribute("class", "project new-project");
         let newImg = document.createElement("img");
         newImg.setAttribute("class", "project-add");
         newImg.src = addImage;
         newImg.alt = "New Project";
 
-        newProject.appendChild(newImg);
-        content.appendChild(newProject);
+        // when new project is clicked, open the new project dialog
+        newProjectDiv.addEventListener("click", () => {
+            projectDialog.showModal();
+        });
+
+        newProjectDiv.appendChild(newImg);
+        content.appendChild(newProjectDiv);
     }
 
+    // create the task elements and add them to the DOM for a single project when the open button is selected
     let displayProject = (proj) => {
         let content = document.querySelector(".content-container");
         content.innerHTML = "";
@@ -160,6 +170,28 @@ let displayController = (function () {
         newTask.appendChild(newImg);
         content.appendChild(newTask);
     }
+
+    // setup new project dialog functionality
+    let closeButton = document.querySelector("#project-cancel");
+    let confirmBtn = document.querySelector("#project-submit");
+
+    confirmBtn.addEventListener("click", (event) => {
+        event.preventDefault(); // We don't want to submit this fake form
+
+        let newTitle = document.querySelector("#title");
+        let newAuthor = document.querySelector("#desc-input");
+
+        let newProj = new project(newTitle.value, newAuthor.value);
+        allProjects.push(newProj);
+
+        newTitle.value = "";
+        newAuthor.value = "";
+        
+        projectDialog.close();
+        displayAllProjects();
+    });
+
+    // setup new task dialog functionality
 
     return { displayAllProjects, displayProject }
 })();
