@@ -8,8 +8,6 @@ class project {
     constructor(title, description) {
         this.title = title;
         this.description = description;
-        this.id = project.projID;
-        project.projID++;
     }
 
     addTask(task) {

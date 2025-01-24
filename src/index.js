@@ -20,8 +20,10 @@ let displayController = (function () {
     let projectDialog = document.querySelector("#project-dialog");
     let taskDialog =  document.querySelector("#task-dialog");
 
-    // create the project overview elements and add them to the DOM
+    // create the project elements for the all projects page and add them to the DOM
     let displayAllProjects = () => {
+        let projectCount = 0;
+
         let content = document.querySelector(".content-container");
         content.innerHTML = "";
         content.style.flexDirection = "row";
@@ -38,6 +40,9 @@ let displayController = (function () {
        
         
         allProjects.forEach(proj => {
+            proj.id = projectCount;
+            projectCount++;
+
             let projectDiv = document.createElement("div");
             projectDiv.setAttribute("class", "project");
 
@@ -52,21 +57,40 @@ let displayController = (function () {
             projectDesc.setAttribute("class", "project-description");
             projectDesc.textContent = proj.description;
 
-            let projectButton = document.createElement("button");
-            projectButton.setAttribute("class", "project-button");
-            projectButton.setAttribute("projID", proj.id);
-            projectButton.textContent = "Open";
+            let projectButtons = document.createElement("div");
+            projectButtons.setAttribute("class", "project-buttons");
+
+            let openProject = document.createElement("button");
+            openProject.setAttribute("class", "project-open");
+            openProject.setAttribute("projID", proj.id);
+            openProject.textContent = "open";
+
+            // event listener for the open button on each project card
+            openProject.addEventListener("click", () => {
+                displayProject(proj);
+            });
+
+            let deleteProjectBtn = document.createElement("button");
+            deleteProjectBtn.setAttribute("class", "project-delete");
+            deleteProjectBtn.setAttribute("projID", proj.id);
+            deleteProjectBtn.textContent = "delete";
+
+            // event listener to delete a project
+            deleteProjectBtn.addEventListener("click", () => {
+                deleteProject(proj.id);
+            });
+
 
             textDiv.appendChild(projectTitle);
             textDiv.appendChild(projectDesc);
             projectDiv.appendChild(textDiv);
-            projectDiv.appendChild(projectButton);
+
+            projectButtons.appendChild(openProject);
+            projectButtons.appendChild(deleteProjectBtn);
+
+            projectDiv.appendChild(projectButtons);
             content.appendChild(projectDiv);
 
-            // event listener for the open button on each project card
-            projectButton.addEventListener("click", () => {
-                displayProject(proj);
-            });
         });
 
         let newProjectDiv = document.createElement("div");
@@ -164,14 +188,14 @@ let displayController = (function () {
             // editButton.setAttribute("projID", task.id);
             // editButton.textContent = "edit";
 
-            let deleteButton = document.createElement("button");
-            deleteButton.setAttribute("class", "task-delete");
-            deleteButton.setAttribute("class", "task-button");
-            deleteButton.setAttribute("projID", task.id);
-            deleteButton.textContent = "delete";
+            let deleteTaskBtn = document.createElement("button");
+            deleteTaskBtn.setAttribute("class", "task-delete");
+            deleteTaskBtn.setAttribute("class", "task-button");
+            deleteTaskBtn.setAttribute("projID", task.id);
+            deleteTaskBtn.textContent = "delete";
 
             // event listener for deleting a task
-            deleteButton.addEventListener("click", () => {
+            deleteTaskBtn.addEventListener("click", () => {
                 deleteTask(task.id);
             });
 
@@ -185,7 +209,7 @@ let displayController = (function () {
             headerDiv.appendChild(infoDiv);
 
             //buttonsDiv.appendChild(editButton);
-            buttonsDiv.appendChild(deleteButton);
+            buttonsDiv.appendChild(deleteTaskBtn);
 
             taskDiv.appendChild(headerDiv);
             taskDiv.appendChild(taskDesc);
@@ -207,6 +231,11 @@ let displayController = (function () {
 
         newTaskDiv.appendChild(newImg);
         content.appendChild(newTaskDiv);
+    }
+
+    let deleteProject = (projectID) => {
+        allProjects.splice(projectID, 1);
+        displayAllProjects();
     }
 
     let deleteTask = (taskID) => {
@@ -276,7 +305,7 @@ let displayController = (function () {
     });
 
 
-    return { displayAllProjects, displayProject }
+    return { displayAllProjects }
 })();
 
 
