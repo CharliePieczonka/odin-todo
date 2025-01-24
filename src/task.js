@@ -1,5 +1,4 @@
 class task {
-    static taskID = 0;
     title;
     description;
     dueDate;
@@ -12,8 +11,6 @@ class task {
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
-        this.id = task.taskID;
-        task.taskID++;
     }
 
     isComplete() {

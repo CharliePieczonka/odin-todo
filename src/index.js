@@ -16,7 +16,7 @@ allProjects.push(project1);
 console.log(project1);
 
 let displayController = (function () {
-    let currentProjIndex = -1;
+    let currentProj;
     let projectDialog = document.querySelector("#project-dialog");
     let taskDialog =  document.querySelector("#task-dialog");
 
@@ -87,7 +87,8 @@ let displayController = (function () {
 
     // create the task elements and add them to the DOM for a single project when the open button is selected
     let displayProject = (proj) => {
-        currentProjIndex = proj.id;
+        let taskCount = 0;
+        currentProj= proj;
 
         let content = document.querySelector(".content-container");
         content.innerHTML = "";
@@ -113,11 +114,26 @@ let displayController = (function () {
         }
 
         proj.tasks.forEach(task => {
+            task.id = taskCount;
+            taskCount++;
+
             let taskDiv = document.createElement("div");
             taskDiv.setAttribute("class", "task");
 
             let headerDiv = document.createElement("div");
             headerDiv.setAttribute("class", "task-header");
+
+            let headerLeft = document.createElement("div");
+            headerLeft.setAttribute("class", "task-header-left");
+
+            let checkBox = document.createElement("input");
+            checkBox.setAttribute("type", "checkbox");
+            checkBox.setAttribute("class", "task-completed");
+
+            // event listener for completing a task 
+            checkBox.addEventListener("change", () => {
+                toggleCompletion(checkBox.checked, task.id);
+            });
 
             let taskTitle = document.createElement("p");
             taskTitle.setAttribute("class", "task-title");
@@ -141,11 +157,12 @@ let displayController = (function () {
             let buttonsDiv = document.createElement("div");
             buttonsDiv.setAttribute("class", "task-buttons");
 
-            let editButton = document.createElement("button");
-            editButton.setAttribute("class", "task-edit");
-            editButton.setAttribute("class", "task-button");
-            editButton.setAttribute("projID", task.id);
-            editButton.textContent = "edit";
+            // TODO: implement edit task button
+            // let editButton = document.createElement("button");
+            // editButton.setAttribute("class", "task-edit");
+            // editButton.setAttribute("class", "task-button");
+            // editButton.setAttribute("projID", task.id);
+            // editButton.textContent = "edit";
 
             let deleteButton = document.createElement("button");
             deleteButton.setAttribute("class", "task-delete");
@@ -153,13 +170,21 @@ let displayController = (function () {
             deleteButton.setAttribute("projID", task.id);
             deleteButton.textContent = "delete";
 
-            headerDiv.appendChild(taskTitle);
+            // event listener for deleting a task
+            deleteButton.addEventListener("click", () => {
+                deleteTask(task.id);
+            });
+
+            headerLeft.appendChild(checkBox);
+            headerLeft.appendChild(taskTitle);
 
             infoDiv.appendChild(taskDue);
             infoDiv.appendChild(taskPriority);
+
+            headerDiv.appendChild(headerLeft);
             headerDiv.appendChild(infoDiv);
 
-            buttonsDiv.appendChild(editButton);
+            //buttonsDiv.appendChild(editButton);
             buttonsDiv.appendChild(deleteButton);
 
             taskDiv.appendChild(headerDiv);
@@ -182,6 +207,29 @@ let displayController = (function () {
 
         newTaskDiv.appendChild(newImg);
         content.appendChild(newTaskDiv);
+    }
+
+    let deleteTask = (taskID) => {
+        currentProj.tasks.splice(taskID, 1);
+        displayProject(currentProj);
+    }
+
+    let toggleCompletion = (toggleValue, taskID) => {
+        let task = document.querySelectorAll(".task")[taskID];
+
+        //TODO: Strikethrough the text on the task
+        // let taskTitle = task.querySelector("task-title");
+        // let taskDue = task.querySelector("task-duedate");
+        // let taskPriority = task.querySelector("task-priority");
+        // let taskDesc = task.querySelector("task-description");
+
+        if(toggleValue) {
+            task.style.backgroundColor = "lightgrey";
+        }
+        else {
+            task.style.backgroundColor = "white";
+        }
+       
     }
 
     // setup new project dialog functionality
@@ -215,7 +263,7 @@ let displayController = (function () {
         let newPriority = document.querySelector("#priority");
 
         let newTask = new task(newTitle.value, newDesc.value, newDueDate.valueAsDate.toLocaleDateString("en-US"), newPriority.value);
-        allProjects[currentProjIndex].tasks.push(newTask);
+        currentProj.tasks.push(newTask);
 
         newTitle.value = "";
         newDesc.value = "";
@@ -224,7 +272,7 @@ let displayController = (function () {
 
         
         taskDialog.close();
-        displayProject(allProjects[currentProjIndex]);
+        displayProject(currentProj);
     });
 
 

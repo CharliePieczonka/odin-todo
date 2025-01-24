@@ -136,9 +136,19 @@ button:active {
     justify-content: space-between;
 }
 
+.task-header-left {
+    display: flex;
+    gap: 20px;
+}
+
 .task-info {
     display: flex;
     flex-direction: column;
+}
+
+input[type='checkbox'] {
+    transform: scale(2);
+    align-self: center;
 }
 
 .task-title {
