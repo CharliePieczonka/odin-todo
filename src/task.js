@@ -1,4 +1,4 @@
-class task {
+class Task {
     title;
     description;
     dueDate;
@@ -27,4 +27,4 @@ class task {
     }
 }
 
-export { task }
+export { Task }

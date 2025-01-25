@@ -1,4 +1,4 @@
-class project {
+class Project {
     static projID = 0;
     title;
     description;
@@ -13,11 +13,6 @@ class project {
     addTask(task) {
         this.tasks.push(task);
     }
-
-    displayProject() {
-        
-
-    }
 }
 
-export { project }
+export { Project }

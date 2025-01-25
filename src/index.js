@@ -1,19 +1,9 @@
 import "./styles.css";
-import { project } from "./project.js";
-import { task } from "./task.js";
+import { Project } from "./project.js";
+import { Task } from "./task.js";
 import addImage from "./images/add.svg";
 
 let allProjects = [];
-
-let project1 = new project("Default Project", "This is the default project present when the user first runs the app.");
-let task1 = new task("Initial Setup", "Initialize Webpack and create the required starting files", "1/17/2025", 1);
-let task2 = new task("Create Project Class", "Create project.js and a project class", "1/17/2025", 1);
-
-project1.addTask(task1);
-project1.addTask(task2);
-allProjects.push(project1);
-
-console.log(project1);
 
 let displayController = (function () {
     let currentProj;
@@ -181,13 +171,6 @@ let displayController = (function () {
             let buttonsDiv = document.createElement("div");
             buttonsDiv.setAttribute("class", "task-buttons");
 
-            // TODO: implement edit task button
-            // let editButton = document.createElement("button");
-            // editButton.setAttribute("class", "task-edit");
-            // editButton.setAttribute("class", "task-button");
-            // editButton.setAttribute("projID", task.id);
-            // editButton.textContent = "edit";
-
             let deleteTaskBtn = document.createElement("button");
             deleteTaskBtn.setAttribute("class", "task-delete");
             deleteTaskBtn.setAttribute("class", "task-button");
@@ -235,22 +218,18 @@ let displayController = (function () {
 
     let deleteProject = (projectID) => {
         allProjects.splice(projectID, 1);
+        storageController.saveProjects();
         displayAllProjects();
     }
 
     let deleteTask = (taskID) => {
         currentProj.tasks.splice(taskID, 1);
+        storageController.saveProjects();
         displayProject(currentProj);
     }
 
     let toggleCompletion = (toggleValue, taskID) => {
         let task = document.querySelectorAll(".task")[taskID];
-
-        //TODO: Strikethrough the text on the task
-        // let taskTitle = task.querySelector("task-title");
-        // let taskDue = task.querySelector("task-duedate");
-        // let taskPriority = task.querySelector("task-priority");
-        // let taskDesc = task.querySelector("task-description");
 
         if(toggleValue) {
             task.style.backgroundColor = "lightgrey";
@@ -270,13 +249,14 @@ let displayController = (function () {
         let newTitle = document.querySelector("#project-title");
         let newDesc = document.querySelector("#project-desc");
 
-        let newProj = new project(newTitle.value, newDesc.value);
+        let newProj = new Project(newTitle.value, newDesc.value);
         allProjects.push(newProj);
 
         newTitle.value = "";
         newDesc.value = "";
         
         projectDialog.close();
+        storageController.saveProjects();
         displayAllProjects();
     });
 
@@ -291,7 +271,7 @@ let displayController = (function () {
         let newDueDate = document.querySelector("#dueDate");
         let newPriority = document.querySelector("#priority");
 
-        let newTask = new task(newTitle.value, newDesc.value, newDueDate.valueAsDate.toLocaleDateString("en-US"), newPriority.value);
+        let newTask = new Task(newTitle.value, newDesc.value, newDueDate.valueAsDate.toLocaleDateString("en-US"), newPriority.value);
         currentProj.tasks.push(newTask);
 
         newTitle.value = "";
@@ -301,6 +281,7 @@ let displayController = (function () {
 
         
         taskDialog.close();
+        storageController.saveProjects();
         displayProject(currentProj);
     });
 
@@ -308,5 +289,50 @@ let displayController = (function () {
     return { displayAllProjects }
 })();
 
+
+// function for handling local storage
+let storageController= (function () {
+    let projectsExist = () => {
+        return localStorage.getItem("allProjects");
+    }
+    
+    let getProjects = () => {
+        let allProjJSON = JSON.parse(localStorage.getItem("allProjects"));
+        allProjJSON.forEach(proj => {
+            let newProject = new Project(proj.title, proj.description);
+            proj.tasks.forEach(task => {
+                let newTask = new Task(task.title, task.description, task.dueDate, task.priority);
+                newProject.addTask(newTask);
+            });
+    
+            allProjects.push(newProject);
+        });
+    }
+
+    // all Projects (and their tasks) get saved to storage anytime they are modified
+    let saveProjects = () => {
+        localStorage.setItem("allProjects", JSON.stringify(allProjects));
+    }
+
+    return { projectsExist, getProjects, saveProjects }
+})();
+
+
+// initialize the app and display all projects
+// if no projects are found in local storage then initialize it with a default project, otherwise retrieve the projects from local storage
+if(!storageController.projectsExist()) {
+    let project1 = new Project("Default Project", "This is the default project present when the user first runs the app.");
+    let task1 = new Task("Initial Setup", "Initialize Webpack and create the required starting files", "1/17/2025", 1);
+    let task2 = new Task("Create Project Class", "Create project.js and a project class", "1/17/2025", 1);
+    
+    project1.addTask(task1);
+    project1.addTask(task2);
+    allProjects.push(project1);
+
+    storageController.saveProjects();
+}
+else {
+    storageController.getProjects();
+}
 
 displayController.displayAllProjects();
