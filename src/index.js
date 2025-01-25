@@ -27,7 +27,6 @@ let displayController = (function () {
         if(backButton !== null) {
             mainHeader.removeChild(backButton);
         }
-       
         
         allProjects.forEach(proj => {
             proj.id = projectCount;
@@ -69,7 +68,6 @@ let displayController = (function () {
             deleteProjectBtn.addEventListener("click", () => {
                 deleteProject(proj.id);
             });
-
 
             textDiv.appendChild(projectTitle);
             textDiv.appendChild(projectDesc);
@@ -143,6 +141,12 @@ let displayController = (function () {
             let checkBox = document.createElement("input");
             checkBox.setAttribute("type", "checkbox");
             checkBox.setAttribute("class", "task-completed");
+
+            // if task is complete (from local storage) then set the checkbox and color accordingly
+            if(task.isComplete()) {
+                checkBox.checked = true;
+                taskDiv.style.backgroundColor = "lightgrey"; 
+            }
 
             // event listener for completing a task 
             checkBox.addEventListener("change", () => {
@@ -232,12 +236,14 @@ let displayController = (function () {
         let task = document.querySelectorAll(".task")[taskID];
 
         if(toggleValue) {
-            task.style.backgroundColor = "lightgrey";
+            task.style.backgroundColor = "lightgrey";            
         }
         else {
             task.style.backgroundColor = "white";
         }
-       
+
+        currentProj.tasks[taskID].toggleComplete();
+        storageController.saveProjects();
     }
 
     // setup new project dialog functionality
@@ -271,7 +277,7 @@ let displayController = (function () {
         let newDueDate = document.querySelector("#dueDate");
         let newPriority = document.querySelector("#priority");
 
-        let newTask = new Task(newTitle.value, newDesc.value, newDueDate.valueAsDate.toLocaleDateString("en-US"), newPriority.value);
+        let newTask = new Task(newTitle.value, newDesc.value, newDueDate.valueAsDate.toLocaleDateString("en-US"), newPriority.value, false);
         currentProj.tasks.push(newTask);
 
         newTitle.value = "";
@@ -289,7 +295,6 @@ let displayController = (function () {
     return { displayAllProjects }
 })();
 
-
 // function for handling local storage
 let storageController= (function () {
     let projectsExist = () => {
@@ -301,7 +306,7 @@ let storageController= (function () {
         allProjJSON.forEach(proj => {
             let newProject = new Project(proj.title, proj.description);
             proj.tasks.forEach(task => {
-                let newTask = new Task(task.title, task.description, task.dueDate, task.priority);
+                let newTask = new Task(task.title, task.description, task.dueDate, task.priority, task.complete);
                 newProject.addTask(newTask);
             });
     
@@ -317,13 +322,12 @@ let storageController= (function () {
     return { projectsExist, getProjects, saveProjects }
 })();
 
-
 // initialize the app and display all projects
 // if no projects are found in local storage then initialize it with a default project, otherwise retrieve the projects from local storage
 if(!storageController.projectsExist()) {
     let project1 = new Project("Default Project", "This is the default project present when the user first runs the app.");
-    let task1 = new Task("Initial Setup", "Initialize Webpack and create the required starting files", "1/17/2025", 1);
-    let task2 = new Task("Create Project Class", "Create project.js and a project class", "1/17/2025", 1);
+    let task1 = new Task("Initial Setup", "Initialize Webpack and create the required starting files", "1/17/2025", 1, false);
+    let task2 = new Task("Create Project Class", "Create project.js and a project class", "1/17/2025", 1, false);
     
     project1.addTask(task1);
     project1.addTask(task2);

@@ -3,14 +3,15 @@ class Task {
     description;
     dueDate;
     priority;
-    complete = false;
+    complete;
     id;
 
-    constructor(title, description, dueDate, priority) {
+    constructor(title, description, dueDate, priority, complete) {
         this.title = title;
         this.description = description;
         this.dueDate = dueDate;
         this.priority = priority;
+        this.complete = complete;
     }
 
     isComplete() {
